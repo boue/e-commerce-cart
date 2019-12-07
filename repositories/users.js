@@ -27,6 +27,8 @@ class UsersRepository {
         records.push(attrs)
 
         await this.writeAll(records)
+
+        return attrs
     }
 
     async writeAll(records) {
@@ -80,15 +82,4 @@ class UsersRepository {
     }
 }
 
-const test = async () => {
-
-    const repo = new UsersRepository('users.json')
-
-    await repo.update(
-        '6407f96d', {
-            password: 'mypassword'
-        }
-    )
-}
-
-test()
+module.exports = new UsersRepository('users.json')
