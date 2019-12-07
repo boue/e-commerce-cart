@@ -47,15 +47,48 @@ class UsersRepository {
         const filteredRecords = records.filter(record => record.id !== id)
         await this.writeAll(filteredRecords)
     }
+
+    async update(id, attrs) {
+        const records = await this.getAll()
+        const record = records.find(record => record.id === id)
+
+        if (!record) {
+            throw new Error(`Record with id ${id} not found`)
+        }
+
+        // copy over the attrs inside of record
+        Object.assign(record, attrs)
+        await this.writeAll(records)
+    }
+
+    async getOneBy(filters) {
+        const records = await this.getAll()
+
+        for (let record of records) {
+            let found = true
+
+            for (let key in filters) {
+                if (record[key] !== filters[key]) {
+                    found = false
+                }
+            }
+
+            if (found) {
+                return record
+            }
+        }
+    }
 }
 
 const test = async () => {
 
     const repo = new UsersRepository('users.json')
 
-    const user = await repo.getOne('f44634da')
-
-    console.log(user)
+    await repo.update(
+        '6407f96d', {
+            password: 'mypassword'
+        }
+    )
 }
 
 test()
