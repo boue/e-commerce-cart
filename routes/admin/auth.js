@@ -42,7 +42,6 @@ router.post('/signup',
         })
     ], async (req, res) => {
         const errors = validationResult(req)
-        console.log(errors)
         const {
             email,
             password,
