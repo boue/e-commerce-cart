@@ -27,6 +27,7 @@ router.post('/signup',
         requirePasswordConfirmation
     ], async (req, res) => {
         const errors = validationResult(req)
+        console.log(errors)
         const {
             email,
             password,
