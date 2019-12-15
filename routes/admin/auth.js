@@ -60,7 +60,31 @@ router.get('/signin', (req, res) => {
     res.send(signinTemplate())
 })
 
-router.post('/signin', async (req, res) => {
+router.post('/signin', [
+    check('email').trim().normalizeEmail().isEmail().withMessage('Must provide a valid email').custom(async (email) => {
+        const user = await usersRepo.getOneBy({
+            email
+        })
+        if (!user) {
+            throw new Error('Email not found!')
+        }
+    }),
+    check('password').trim().custom(async (password) => {
+        const user = await usersRepo.getOneBy({
+            email: req.body.email
+        })
+        if (!user) {
+            throw new Error('Invalid password')
+        }
+        const validPassword = await usersRepo.comparePasswords(
+            user.password, password
+        )
+
+        if (!validPassword) {
+            return res.send('Invalid password')
+        }
+    })
+], async (req, res) => {
     const {
         email,
         password
@@ -71,14 +95,6 @@ router.post('/signin', async (req, res) => {
 
     if (!user) {
         return res.send('Email not found')
-    }
-
-    const validPassword = await usersRepo.comparePasswords(
-        user.password, password
-    )
-
-    if (!validPassword) {
-        return res.send('Invalid password')
     }
 
     req.session.userId = user.id
