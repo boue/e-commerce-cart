@@ -1,22 +1,7 @@
 const layout = require('../layout')
-
-const getError = (errors, prop) => {
-    // prop === 'email' || 'password' || 'passwordConfirmation'
-    //Errors is an array     
-    //    errors:
-    //    [ { value: 'cmcmc',
-    //        msg: 'Passwords must match',
-    //        param: 'passwordConfirmation',
-    //        location: 'body' } ] }
-    try {
-        return errors.mapped()[prop].msg
-        // so here errors.mapped returns object up top
-        // just the specific property msg we are looking for
-    } catch (err) {
-        // we are trying to catch an error that doesnt exist
-        return ''
-    }
-}
+const {
+    getError
+} = require('../../helpers')
 
 module.exports = ({
     req,
