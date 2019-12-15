@@ -5,7 +5,7 @@ const authRouter = require('./routes/admin/auth')
 
 const app = express()
 // Middlewares
-
+app.use(express.static('public'))
 // use bodyParser() if you want the form data to be 
 // available in req.body.
 app.use(bodyParser.urlencoded({

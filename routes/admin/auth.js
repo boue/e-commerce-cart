@@ -73,8 +73,12 @@ router.post(
         } = req.body;
 
         const user = await usersRepo.getOneBy({
-            email
+            email: email
         });
+
+        if (!user) {
+            throw new Error('Email not found!')
+        }
 
         req.session.userId = user.id;
 
